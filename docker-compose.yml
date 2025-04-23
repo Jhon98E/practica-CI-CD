@@ -1,0 +1,17 @@
+version: "3.9"
+services:
+  api:
+    build: .
+    ports:
+      - "8000:8000"
+    depends_on:
+      - mockoon
+    environment:
+      - SERVER_URL=http://mockoon:4000/user_type
+  mockoon:
+    image: mockoon/cli
+    command: -d /data/mockoon.json
+    volumes:
+      - ./mockoon.json:/data/mockoon.json:ro
+    ports:
+      - "4000:4000"
