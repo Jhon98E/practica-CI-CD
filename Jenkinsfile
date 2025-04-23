@@ -10,20 +10,20 @@ pipeline {
   stages {
     stage('Check Python Version') {
       steps {
-        bat '"C:\\Users\\sebas\\AppData\\Local\\Programs\\Python\\Python313\\python.exe" --version'
+        bat '"C:\\Users\\jhone\\AppData\\Local\\Programs\\Python\\Python313\\python.exe" --version'
       }
     }
 
     stage('Clonar repositorio') {
       steps {
-        git branch: 'main', url: 'https://github.com/IRenly/clase10-TalleCI-CD'
+        git branch: 'main', url: 'https://github.com/Jhon98E/practica-CI-CD.git'
       }
     }
 
     stage('Instalar dependencias') {
       steps {
         bat """
-          "C:\\Users\\sebas\\AppData\\Local\\Programs\\Python\\Python313\\python.exe" -m venv %VENV%
+          "C:\\Users\\jhone\\AppData\\Local\\Programs\\Python\\Python313\\python.exe" -m venv %VENV%
           call %VENV%\\Scripts\\activate.bat
           "%VENV%\\Scripts\\pip.exe" install --upgrade pip
           "%VENV%\\Scripts\\pip.exe" install -r requirements.txt
@@ -43,7 +43,7 @@ pipeline {
     stage('Construir imagen Docker') {
       steps {
         script {
-          dockerImage = docker.build("irenly/clase10-talleci-cd")
+          dockerImage = docker.build("jhonenriquez2598/practica-cd")
         }
       }
     }
@@ -61,7 +61,7 @@ pipeline {
     stage('Push to DockerHub') {
       steps {
         script {
-          docker.image('irenly/clase10-talleci-cd').push()
+          docker.image('jhonenriquez2598/practica-cd').push()
         }
       }
     }
@@ -75,23 +75,5 @@ pipeline {
         """
       }
     }
-
-    // stage('Análisis SonarQube') {
-    //   steps {
-    //     withSonarQubeEnv("${SONARQUBE_SERVER}") {
-    //       withCredentials([string(credentialsId: 'sonarqube_auth_token', variable: 'SONAR_TOKEN')]) {
-    //         bat """
-    //           "${SONAR_SCANNER_HOME}\\StartSonar.bat" ^
-    //             -Dsonar.projectKey=my-python-app ^
-    //             -Dsonar.sources=src ^
-    //             -Dsonar.host.url=http://sonarqube:9000 ^
-    //             -Dsonar.token=%SONAR_TOKEN% ^
-    //             -Dsonar.python.coverage.reportPaths=coverage.xml ^
-    //             -Dsonar.python.pylint.reportPaths=pylint-report.json
-    //         """
-    //       }
-    //     }
-    //   }
-    // }
   }
 }
